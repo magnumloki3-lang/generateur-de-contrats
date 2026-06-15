@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Générateur de Contrats — Mali</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --vert:     #1B4332;
+      --or:       #C9A84C;
+      --fond:     #F7F5F0;
+      --blanc:    #FFFFFF;
+      --texte:    #1A1A1A;
+      --gris:     #6B7280;
+      --bordure:  #D1C9B8;
+      --accent:   #E8F5E9;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--fond);
+      color: var(--texte);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--vert);
+      color: var(--blanc);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 4px solid var(--or);
+    }
+    header .logo {
+      width: 44px; height: 44px;
+      background: var(--or);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'EB Garamond', serif;
+      font-size: 20px; font-weight: 600;
+      color: var(--vert);
+      flex-shrink: 0;
+    }
+    header h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 22px; font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    header p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 2px;
+    }
+
+    /* LAYOUT */
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px 60px;
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      header { padding: 20px 24px; }
+    }
+
+    /* FORMULAIRE */
+    .formulaire {
+      background: var(--blanc);
+      border: 1px solid var(--bordure);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .section-titre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--or);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--bordure);
+    }
+
+    .groupe { margin-bottom: 28px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gris);
+      margin-bottom: 6px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--bordure);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--texte);
+      background: var(--fond);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--vert);
+      background: var(--blanc);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .deux-colonnes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn-generer {
+      width: 100%;
+      padding: 14px;
+      background: var(--vert);
+      color: var(--blanc);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .btn-generer:hover { background: #163829; }
+    .btn-generer:active { transform: scale(0.99); }
+
+    /* APERÇU */
+    .apercu {
+      position: sticky;
+      top: 24px;
+      height: fit-content;
+    }
+
+    .apercu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .apercu-header span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gris);
+    }
+
+    .btn-imprimer {
+      padding: 8px 16px;
+      background: var(--or);
+      color: var(--vert);
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-imprimer:hover { opacity: 0.85; }
+
+    .contrat-rendu {
+      background: var(--blanc);
+      border: 1px solid var(--bordure);
+      border-radius: 12px;
+      padding: 40px 36px;
+      font-family: 'EB Garamond', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--texte);
+      min-height: 600px;
+    }
+
+    .contrat-rendu h2 {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--vert);
+    }
+    .contrat-rendu .sous-titre {
+      text-align: center;
+      font-size: 14px;
+      color: var(--gris);
+      margin-bottom: 28px;
+      font-family: 'Inter', sans-serif;
+    }
+    .contrat-rendu .separateur {
+      border: none;
+      border-top: 2px solid var(--or);
+      margin: 24px 0;
+    }
+    .contrat-rendu .article {
+      margin-bottom: 20px;
+    }
+    .contrat-rendu .article-titre {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--vert);
+      margin-bottom: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .contrat-rendu .signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--bordure);
+    }
+    .contrat-rendu .sig-bloc {
+      text-align: center;
+    }
+    .contrat-rendu .sig-ligne {
+      border-top: 1px solid var(--texte);
+      margin-top: 48px;
+      padding-top: 8px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--gris);
+    }
+    .placeholder-msg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      color: var(--bordure);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      text-align: center;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .placeholder-msg svg { opacity: 0.4; }
+
+    @media print {
+      header, .formulaire, .apercu-header, .btn-imprimer { display: none !important; }
+      .container { grid-template-columns: 1fr; margin: 0; padding: 0; }
+      .contrat-rendu { border: none; padding: 20px; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">§</div>
+  <div>
+    <h1>Générateur de Contrats de Prestation</h1>
+    <p>Droit OHADA — République du Mali</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- FORMULAIRE -->
+  <div class="formulaire">
+
+    <div class="groupe">
+      <div class="section-titre">Prestataire (celui qui fournit le service)</div>
+      <label>Nom complet / Dénomination sociale</label>
+      <input type="text" id="prest-nom" placeholder="Ex: CTI-MALI-SARL" oninput="mettreAJour()"/>
+      <br/><br/>
+      <label>Forme juridique & siège social</label>
+      <input type="text" id="prest-siege" placeholder="Ex: SARL, ACI 2000, Bamako" oninput="mettreAJour()"/>
+      <br/><br/>
+      <label>Représentant légal</label>
+      <input type="text" id="prest-rep" placeholder="Ex: M. Koné Moussa, Gérant" oninput="mettreAJour()"/>
+    </div>
+
+    <div class="groupe">
+      <div class="section-titre">Client (celui qui commande)</div>
+      <label>Nom complet / Dénomination sociale</label>
+      <input type="text" id="client-nom" placeholder="Ex: Société DIARRA & Associés" oninput="mettreAJour()"/>
+      <br/><br/>
+      <label>Adresse / siège social</label>
+      <input type="text" id="client-siege" placeholder="Ex: Hippodrome, Bamako" oninput="mettreAJour()"/>
+      <br/><br/>
+      <label>Représentant légal</label>
+      <input type="text" id="client-rep" placeholder="Ex: Mme Diarra Fatoumata, DG" oninput="mettreAJour()"/>
+    </div>
+
+    <div class="groupe">
+      <div class="section-titre">Objet & Conditions</div>
+      <label>Objet du contrat (description de la prestation)</label>
+      <textarea id="objet" placeholder="Ex: Travaux de construction d'un entrepôt commercial de 500m² situé à Kalaban-Coro..." oninput="mettreAJour()"></textarea>
+      <br/>
+      <div class="deux-colonnes">
+        <div>
+          <label>Montant (FCFA)</label>
+          <input type="number" id="montant" placeholder="Ex: 5000000" oninput="mettreAJour()"/>
+        </div>
+        <div>
+          <label>Modalité de paiement</label>
+          <select id="paiement" onchange="mettreAJour()">
+            <option value="en une seule fois à la livraison">En une seule fois à la livraison</option>
+            <option value="30% à la signature, 70% à la livraison">30% signature / 70% livraison</option>
+            <option value="50% à la signature, 50% à la livraison">50% / 50%</option>
+            <option value="par mensualités convenues entre les parties">Par mensualités</option>
+          </select>
+        </div>
+      </div>
+      <br/>
+      <div class="deux-colonnes">
+        <div>
+          <label>Date de début</label>
+          <input type="date" id="date-debut" oninput="mettreAJour()"/>
+        </div>
+        <div>
+          <label>Date de fin / livraison</label>
+          <input type="date" id="date-fin" oninput="mettreAJour()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="groupe">
+      <div class="section-titre">Clauses optionnelles</div>
+      <label>Pénalités de retard (ex: 0,5% par semaine)</label>
+      <input type="text" id="penalites" placeholder="Laisser vide si aucune" oninput="mettreAJour()"/>
+      <br/><br/>
+      <label>Juridiction compétente en cas de litige</label>
+      <input type="text" id="juridiction" placeholder="Ex: Tribunal de Commerce de Bamako" oninput="mettreAJour()"/>
+    </div>
+
+    <button class="btn-generer" onclick="mettreAJour()">⟳ Actualiser le contrat</button>
+  </div>
+
+  <!-- APERÇU -->
+  <div class="apercu">
+    <div class="apercu-header">
+      <span>Aperçu du contrat</span>
+      <button class="btn-imprimer" onclick="window.print()">🖨 Imprimer / PDF</button>
+    </div>
+    <div class="contrat-rendu" id="rendu">
+      <div class="placeholder-msg">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Remplis le formulaire pour générer le contrat
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function formaterDate(d) {
+    if (!d) return "___________";
+    const [a, m, j] = d.split("-");
+    const mois = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+    return `${parseInt(j)} ${mois[parseInt(m)-1]} ${a}`;
+  }
+
+  function formaterMontant(n) {
+    if (!n) return "___________";
+    return parseInt(n).toLocaleString("fr-FR") + " francs CFA (FCFA)";
+  }
+
+  function val(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function mettreAJour() {
+    const prestNom   = val("prest-nom")   || "___________";
+    const prestSiege = val("prest-siege") || "___________";
+    const prestRep   = val("prest-rep")   || "___________";
+    const clientNom  = val("client-nom")  || "___________";
+    const clientSiege= val("client-siege")|| "___________";
+    const clientRep  = val("client-rep")  || "___________";
+    const objet      = val("objet")       || "___________";
+    const montant    = formaterMontant(val("montant"));
+    const paiement   = val("paiement");
+    const dateDebut  = formaterDate(val("date-debut"));
+    const dateFin    = formaterDate(val("date-fin"));
+    const penalites  = val("penalites");
+    const juridiction= val("juridiction") || "Tribunal de Commerce de Bamako";
+    const dateAujourdhui = formaterDate(new Date().toISOString().split("T")[0]);
+
+    const clausePenalite = penalites
+      ? `<div class="article"><div class="article-titre">Article 6 : Pénalités de retard</div>
+         En cas de retard dans l'exécution des prestations imputable au Prestataire, celui-ci sera redevable de pénalités de retard calculées comme suit : ${penalites}, déduites automatiquement du solde dû.</div>`
+      : "";
+
+    document.getElementById("rendu").innerHTML = `
+      <h2>Contrat de Prestation de Services</h2>
+      <div class="sous-titre">Conclu dans le cadre du droit OHADA applicable en République du Mali</div>
+      <hr class="separateur"/>
+
+      <div class="article">
+        <div class="article-titre">Entre les soussignés</div>
+        <strong>${prestNom}</strong>, ${prestSiege}, représentée par ${prestRep}, ci-après dénommée <em>« le Prestataire »</em>,
+        <br/><br/>
+        <strong>Et</strong>
+        <br/><br/>
+        <strong>${clientNom}</strong>, ${clientSiege}, représentée par ${clientRep}, ci-après dénommée <em>« le Client »</em>.
+      </div>
+
+      <hr class="separateur"/>
+
+      <div class="article">
+        <div class="article-titre">Article 1 : Objet du contrat</div>
+        Le présent contrat a pour objet la réalisation par le Prestataire, pour le compte du Client, de la prestation suivante : ${objet}.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article 2 : Durée et délai d'exécution</div>
+        Le présent contrat prend effet à compter du <strong>${dateDebut}</strong> et prendra fin au plus tard le <strong>${dateFin}</strong>, date à laquelle la prestation devra être intégralement réalisée et livrée, sauf accord écrit contraire des parties.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article 3 : Rémunération</div>
+        En contrepartie des prestations convenues, le Client s'engage à verser au Prestataire la somme de <strong>${montant}</strong>, selon les modalités suivantes : <strong>${paiement}</strong>. Tout paiement sera effectué par virement bancaire ou tout autre moyen convenu par écrit entre les parties.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article 4 : Obligations du Prestataire</div>
+        Le Prestataire s'engage à exécuter les prestations décrites à l'article 1 avec diligence, professionnalisme et dans le respect des règles de l'art applicable à son secteur d'activité. Il s'engage à informer le Client de tout incident susceptible d'affecter l'exécution du présent contrat.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article 5 : Obligations du Client</div>
+        Le Client s'engage à fournir au Prestataire toutes les informations, documents et accès nécessaires à la bonne exécution de la prestation, et à régler les sommes dues aux échéances convenues à l'article 3.
+      </div>
+
+      ${clausePenalite}
+
+      <div class="article">
+        <div class="article-titre">Article ${penalites ? "7" : "6"} : Confidentialité</div>
+        Les parties s'engagent mutuellement à maintenir strictement confidentiels tous documents, informations et données échangés dans le cadre de l'exécution du présent contrat, et ce pendant toute la durée du contrat et pour une période de deux (2) ans après son terme.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article ${penalites ? "8" : "7"} : Résiliation</div>
+        En cas de manquement grave par l'une des parties à ses obligations, l'autre partie pourra résilier le présent contrat après mise en demeure restée sans effet pendant quinze (15) jours, sans préjudice de tout recours en dommages et intérêts.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article ${penalites ? "9" : "8"} : Droit applicable et juridiction</div>
+        Le présent contrat est régi par l'Acte Uniforme OHADA relatif au droit commercial général ainsi que par le droit malien. Tout litige relatif à l'interprétation ou à l'exécution du présent contrat sera soumis à la compétence exclusive du <strong>${juridiction}</strong>.
+      </div>
+
+      <div class="article">
+        <div class="article-titre">Article ${penalites ? "10" : "9"} : Dispositions générales</div>
+        Le présent contrat constitue l'intégralité de l'accord entre les parties et annule tout accord antérieur portant sur le même objet. Toute modification devra faire l'objet d'un avenant signé par les deux parties.
+      </div>
+
+      <p style="margin-top:32px; font-family:'Inter',sans-serif; font-size:13px; color:#6B7280;">
+        Fait à Bamako, le ${dateAujourdhui}, en deux (2) exemplaires originaux, dont un remis à chaque partie.
+      </p>
+
+      <div class="signatures">
+        <div class="sig-bloc">
+          <div style="font-size:13px; font-family:'Inter',sans-serif; color:#6B7280; margin-bottom:4px;">Le Prestataire</div>
+          <div style="font-weight:600;">${prestNom}</div>
+          <div class="sig-ligne">Signature & cachet</div>
+        </div>
+        <div class="sig-bloc">
+          <div style="font-size:13px; font-family:'Inter',sans-serif; color:#6B7280; margin-bottom:4px;">Le Client</div>
+          <div style="font-weight:600;">${clientNom}</div>
+          <div class="sig-ligne">Signature & cachet</div>
+        </div>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>
